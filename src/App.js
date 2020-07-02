@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
 
-import { FormGroup } from "semantic-ui-react";
 import {
   Icon,
   Button,
@@ -11,8 +10,6 @@ import {
   Message,
   Divider,
 } from "semantic-ui-react";
-
-const URL = "https://webhook.site/1cc27b86-6e29-4555-bd6f-209bcd09761c";
 
 const options = [
   { key: "m", text: "Male", value: "male" },
@@ -220,20 +217,6 @@ class App extends Component {
                   />
                 </Form.Group>
                 <Form.Group unstackable widths={3}>
-                  {/* <Form.Field>
-                    <label>Phone</label>
-                    <input
-                      type="number"
-                      name="phone"
-                      error="Пожалуйста, введите номер в формате +7..."
-                      fluid
-                      // value={inputField.phone}
-                      // onChange={(event) => {
-                      //   // console.log("sdf");
-                      //   this.handleInputChange(index, event);
-                      // }}
-                    />
-                  </Form.Field> */}
                   <Form.Input
                     error={this.state.isPhoneValid}
                     fluid
@@ -241,7 +224,6 @@ class App extends Component {
                     placeholder="Phone"
                     name="phone"
                     onChange={(event) => {
-                      // console.log("sdf");
                       this.handleInputChange(index, event);
                       this.isPhoneValid(event);
                     }}
