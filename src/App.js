@@ -29,30 +29,11 @@ class App extends Component {
           gender: "",
           isCorporate: false,
           phone: "",
+          isPhoneValid: false,
         },
       ],
       isCompleted: false,
-      isPhoneValid: false,
     };
-  }
-
-  isPhoneValid(e) {
-    let result;
-    // console.log(e.target.value);
-    var term = e.target.value;
-    var re = new RegExp("^([(+7)]+([0-9]){10})$");
-    if (re.test(term)) {
-      console.log("Valid");
-      result = false;
-    } else {
-      result = true;
-      console.log("Invalid");
-    }
-
-    this.setState({
-      isPhoneValid: result,
-    });
-    // return result;
   }
 
   toggle = (event, data, i) => {
@@ -61,23 +42,6 @@ class App extends Component {
     this.setState(() => {
       return inputFieldsArray;
     });
-  };
-
-  isFormValid = () => {
-    let result;
-
-    for (let i = 0; i < this.state.inputFields.length; i++) {
-      // console.log(this.state.inputFields);
-      if (
-        this.state.inputFields[i].firstName === "" ||
-        this.state.inputFields[i].lastName === "" ||
-        this.state.inputFields[i].gender === ""
-      ) {
-        result = true;
-      } else result = false;
-    }
-    // console.log(result);
-    return result;
   };
 
   handleInputChange = (index, event) => {
@@ -126,6 +90,37 @@ class App extends Component {
     });
   };
 
+  isFormValid = () => {
+    for (let i = 0; i < this.state.inputFields.length; i++) {
+      if (
+        this.state.inputFields[i].firstName === "" ||
+        this.state.inputFields[i].lastName === "" ||
+        this.state.inputFields[i].gender === ""
+      ) {
+        return true;
+      }
+    }
+  };
+
+  isPhoneValid(i, e) {
+    const inputFieldsArray = this.state.inputFields;
+
+    let result;
+    var term = e.target.value;
+    var re = new RegExp("^([(+7)]+([0-9]){10})$");
+    if (re.test(term)) {
+      result = false;
+    } else {
+      result = "Пожалуйста, введите номер в формате +7**********";
+    }
+
+    inputFieldsArray[i].isPhoneValid = result;
+
+    this.setState({
+      inputFields: inputFieldsArray,
+    });
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
 
@@ -143,9 +138,14 @@ class App extends Component {
       .then((response) => console.log("Success:", response));
   };
 
+  isFirstForm() {
+    if (this.state.inputFields.length === 1) {
+      return true;
+    } else return false;
+  }
+
   render() {
     const isEnabled = this.isFormValid();
-    // const isValid = this.isPhoneValid();
 
     return (
       <div className="App">
@@ -157,6 +157,7 @@ class App extends Component {
                   <Header as="h3">Пассажир №{index + 1}</Header>
                   <div>
                     <Icon
+                      disabled={this.isFirstForm()}
                       name="minus square"
                       color="red"
                       onClick={() => {
@@ -165,6 +166,7 @@ class App extends Component {
                       size="large"
                     />
                     <Button
+                      disabled={this.isFirstForm()}
                       onClick={() => {
                         this.handleRemoveFields(index);
                       }}
@@ -218,22 +220,21 @@ class App extends Component {
                 </Form.Group>
                 <Form.Group unstackable widths={3}>
                   <Form.Input
-                    error={this.state.isPhoneValid}
+                    error={this.state.inputFields[index].isPhoneValid}
                     fluid
                     label="Phone"
                     placeholder="Phone"
                     name="phone"
                     onChange={(event) => {
                       this.handleInputChange(index, event);
-                      this.isPhoneValid(event);
+                      this.isPhoneValid(index, event);
                     }}
                   />
                 </Form.Group>
+                <Divider style={{ margin: "24px 0px" }} />
               </div>
             ))}
           </div>
-
-          <Divider style={{ margin: "24px 0px" }} />
 
           <div className="addButton">
             <div>
